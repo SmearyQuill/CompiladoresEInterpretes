@@ -21,6 +21,65 @@ namespace CompiladoresInterpretes
             exprecionRegular = "";
         }
 
+        public void unMetodo(List<String> pila, char operador)
+        {
+            //COMPARATOPE:
+            int numElementosPila = pila.Count;
+            if (numElementosPila == 0)
+            {
+                pila.Add(operador.ToString());
+            }
+            else
+            {
+                if (operador == ')')
+                {
+                    for (int k = numElementosPila - 1; k >= 0; k--)
+                    {
+                        if (pila[k] == "(")
+                        {
+                            pila.RemoveAt(k);
+                            break;
+                        }
+                        exprecionPostfija += pila[pila.Count - 1];
+                        pila.RemoveAt(pila.Count - 1);
+                    }
+                }
+                else
+                {
+
+                    int valorTope = 0;
+                    switch (pila[numElementosPila - 1])
+                    {
+                        case "(": valorTope = 0; break;
+                        case "&": valorTope = 2; break;
+                        case "|": valorTope = 1; break;
+                        case "*": valorTope = 3; break;
+                        case "+": valorTope = 3; break;
+                        case "?": valorTope = 3; break;
+                        default: break;
+                    }
+                    if (operador == '|' && valorTope < 1)
+                        pila.Add(operador.ToString());
+                    else if (operador == '&' && valorTope < 2)
+                        pila.Add(operador.ToString());
+                    else if (operador == '+' && valorTope < 3)
+                        pila.Add(operador.ToString());
+                    else if (operador == '*' && valorTope < 3)
+                        pila.Add(operador.ToString());
+                    else if (operador == '?' && valorTope < 3)
+                        pila.Add(operador.ToString());
+                    else if (operador == '(')
+                        pila.Add(operador.ToString());
+                    else
+                    {
+                        exprecionPostfija += pila[numElementosPila - 1];
+                        pila.RemoveAt(numElementosPila - 1);
+                        unMetodo(pila, operador);
+                    }
+                }
+            }
+        }
+
         public bool convertirPostfija()
         {
             exprecionPostfija = "";
@@ -38,61 +97,7 @@ namespace CompiladoresInterpretes
                 if (operador == '+' || operador == '*' || operador == '&' ||
                     operador == '(' || operador == ')' || operador == '|' || operador == '?')
                 {
-                COMPARATOPE:
-                    int numElementosPila = pila.Count;
-                    if (numElementosPila == 0)
-                    {
-                        pila.Add(operador.ToString());
-                    }
-                    else
-                    {
-                        if (operador == ')')
-                        {
-                            for (int k = numElementosPila - 1; k >= 0; k--)
-                            {
-                                if (pila[k] == "(")
-                                {
-                                    pila.RemoveAt(k);
-                                    break;
-                                }
-                                exprecionPostfija += pila[pila.Count - 1];
-                                pila.RemoveAt(pila.Count - 1);
-                            }
-                        }
-                        else
-                        {
-
-                            int valorTope = 0;
-                            switch (pila[numElementosPila - 1])
-                            {
-                                case "(": valorTope = 0; break;
-                                case "&": valorTope = 2; break;
-                                case "|": valorTope = 1; break;
-                                case "*": valorTope = 3; break;
-                                case "+": valorTope = 3; break;
-                                case "?": valorTope = 3; break;
-                                default: break;
-                            }
-                            if (operador == '|' && valorTope < 1)
-                                pila.Add(operador.ToString());
-                            else if (operador == '&' && valorTope < 2)
-                                pila.Add(operador.ToString());
-                            else if (operador == '+' && valorTope < 3)
-                                pila.Add(operador.ToString());
-                            else if (operador == '*' && valorTope < 3)
-                                pila.Add(operador.ToString());
-                            else if (operador == '?' && valorTope < 3)
-                                pila.Add(operador.ToString());
-                            else if (operador == '(')
-                                pila.Add(operador.ToString());
-                            else
-                            {
-                                exprecionPostfija += pila[numElementosPila - 1];
-                                pila.RemoveAt(numElementosPila - 1);
-                                goto COMPARATOPE;
-                            }
-                        }
-                    }
+                    unMetodo(pila, operador);
                 }
                 else
                 {
@@ -114,7 +119,6 @@ namespace CompiladoresInterpretes
                         //no encuentra el simbolo dentro del alfabeto u operadores
                         return false;
                     }
-
                 }
             }
             for (int i = pila.Count - 1; i >= 0; i--)
