@@ -8,7 +8,7 @@ namespace CompiladoresInterpretes
 {
     public class Automata
     {
-        List<AFN> pilaR;
+        public List<AFN> pilaR;
 
         public Automata()
         {

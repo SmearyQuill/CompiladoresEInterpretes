@@ -52,7 +52,48 @@ namespace CompiladoresInterpretes
             DGV.Rows.Clear();
             DGV.Columns.Clear();
 
+            string lenguaje2 = tbPostfija.Text.Replace("&", "");
+            lenguaje2 = lenguaje2.Replace("|", "");
+            lenguaje2 = lenguaje2.Replace("?", "");
+            lenguaje2 = lenguaje2.Replace("+", "");
+            lenguaje2 = lenguaje2.Replace("*", "");
+            lenguaje2 += "ε";
+            var lenguajetemp = new HashSet<char>(lenguaje2);
+
+
+            DGV.Columns.Add("Estado", "Estado");
+            foreach (char c in lenguajetemp)
+            {
+                DGV.Columns.Add(c.ToString(), c.ToString());
+            }
             
+            foreach(Edo estado in unAutomata.pilaR[0].LEstados)
+            {
+                List<string> fila = new List<string>();
+                fila.Add(estado.id.ToString());
+                foreach(List<int> conjunto in estado.conjuntoRelaciones)
+                {
+                    string temp = "{";
+                    foreach(int elemento in conjunto)
+                    {
+                        if (temp != "{")
+                            temp += ",";
+                        temp += elemento.ToString();
+                    }
+                    if (temp == "{")
+                    {
+                        fila.Add("φ");
+                    }
+                    else
+                    {
+                        temp += "}";
+                        fila.Add(temp);
+                    }
+                }
+                DGV.Rows.Add(fila.ToArray());
+            }
+
         }
+
     }
 }

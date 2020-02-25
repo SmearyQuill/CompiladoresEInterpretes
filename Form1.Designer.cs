@@ -97,9 +97,9 @@
             // 
             this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGV.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.DGV.Location = new System.Drawing.Point(0, 254);
+            this.DGV.Location = new System.Drawing.Point(0, 241);
             this.DGV.Name = "DGV";
-            this.DGV.Size = new System.Drawing.Size(297, 150);
+            this.DGV.Size = new System.Drawing.Size(293, 339);
             this.DGV.TabIndex = 7;
             // 
             // bt_CreaAFN
@@ -116,7 +116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(297, 404);
+            this.ClientSize = new System.Drawing.Size(293, 580);
             this.Controls.Add(this.bt_CreaAFN);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.label3);
