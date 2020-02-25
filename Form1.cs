@@ -36,5 +36,13 @@ namespace CompiladoresInterpretes
             }
         }
 
+        private void bt_CreaAFN_Click(object sender, EventArgs e)
+        {
+            Automata unAutomata = new Automata();
+            unAutomata.construirAFN(tbPostfija.Text);
+            unAutomata.enumeraEstados();
+            unAutomata.obtenConjuntos(tbPostfija.Text);
+
+        }
     }
 }

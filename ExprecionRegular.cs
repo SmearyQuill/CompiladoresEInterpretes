@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CompiladoresInterpretes
 {
@@ -162,6 +163,10 @@ namespace CompiladoresInterpretes
                 {
                     nuevaExprecion += "&";
                 }
+                if (existef && exprecion[b] == ')')
+                {
+                    nuevaExprecion += "&";
+                }
                 ///-------------------------
                 if (existef)
                 {
@@ -170,7 +175,6 @@ namespace CompiladoresInterpretes
                         nuevaExprecion += "&";
                     }
                 }
-
                 if (exprecion[b] == ')' && exprecion[f] == '(')
                 {
                     nuevaExprecion += "&";

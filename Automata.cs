@@ -21,15 +21,15 @@ namespace CompiladoresInterpretes
             {
                 if(caracter == '*')//(unario)
                 {
-
+                    cerraduraKleenAFN();
                 }
                 else if (caracter == '+')//(unario)
                 {
-
+                    cerraduraPositivaAFN();
                 }
                 else if (caracter == '?')//(unario)
                 {
-
+                    ceroUnaInstanciaAFN();
                 }
                 else if (caracter == '|')//Union de automatas (binario)
                 {
@@ -48,6 +48,38 @@ namespace CompiladoresInterpretes
             }
         }
 
+        public void cerraduraKleenAFN()
+        {
+            int topePila = pilaR.Count - 1;
+            AFN tope = pilaR[topePila];
+
+            AFN nuevo = new AFN(tope, null, "*");
+
+            pilaR.RemoveAt(topePila);
+            pilaR.Add(nuevo);
+        }
+
+        public void cerraduraPositivaAFN()
+        {
+            int topePila = pilaR.Count - 1;
+            AFN tope = pilaR[topePila];
+
+            AFN nuevo = new AFN(tope, null, "+");
+
+            pilaR.RemoveAt(topePila);
+            pilaR.Add(nuevo);
+        }
+
+        public void ceroUnaInstanciaAFN()
+        {
+            int topePila = pilaR.Count - 1;
+            AFN tope = pilaR[topePila];
+
+            AFN nuevo = new AFN(tope, null, "?");
+
+            pilaR.RemoveAt(topePila);
+            pilaR.Add(nuevo);
+        }
 
         void unionAFN()
         {
@@ -55,49 +87,11 @@ namespace CompiladoresInterpretes
             AFN derecha = pilaR[topePila];
             AFN izquierda = pilaR[topePila - 1];
 
-            Edo inicio = new Edo();
-            Edo aceptacion = new Edo();
-
-            inicio.tipo = "Comienzo";
-            aceptacion.tipo = "Aceptacion";
-
-            foreach(Transicion t in derecha.LTransiciones)
-            {
-                izquierda.LTransiciones.Add(t);
-            }
-
-            foreach(Edo e in derecha.LEstados)
-            {
-                izquierda.LEstados.Add(e);
-            }
-
-            
-
-            foreach(Edo e in izquierda.LEstados)
-            {
-                if(e.tipo == "Comienzo")
-                {
-                    Transicion nuevaPrincipio = new Transicion();
-                    nuevaPrincipio.origen = inicio;
-                    nuevaPrincipio.destino = e;
-                    e.tipo = "Inicio";
-                    izquierda.LTransiciones.Add(nuevaPrincipio);
-                }
-                else if(e.tipo == "Aceptacion")
-                {
-                    Transicion nuevaFinal = new Transicion();
-                    nuevaFinal.destino = aceptacion;
-                    nuevaFinal.origen = e;
-                    e.tipo = "Inicio";
-                    izquierda.LTransiciones.Add(nuevaFinal);
-                }
-            }
-
-            izquierda.LEstados.Add(inicio);
-            izquierda.LEstados.Add(aceptacion);
+            AFN nuevo = new AFN(izquierda, derecha, "union");
 
             pilaR.RemoveAt(topePila);
-            pilaR[topePila - 1] = izquierda;
+            pilaR.RemoveAt(topePila - 1);
+            pilaR.Add(nuevo);
         }
         void concatenaAFN()
         {
@@ -105,50 +99,66 @@ namespace CompiladoresInterpretes
             AFN derecha = pilaR[topePila];
             AFN izquierda = pilaR[topePila - 1];
 
-            int comienzo;
-
-            //busca el estado donde comiensa el automata de la derecha
-            for(comienzo = 0; comienzo < derecha.LEstados.Count; comienzo++)
-            {
-                if(derecha.LEstados[comienzo].tipo == "Comienzo")
-                {
-                    //busca las tranciciones del automata izquierdo que tengan como destino un estado de aceptacion 
-                    //posteriormente si se encuentra pasan a tener un nuevo estado destino, que es el estado donde coienza el automata derecho
-                    for (int i = izquierda.LTransiciones.Count - 1; i >= 0; i--)
-                    {
-                        if (izquierda.LTransiciones[i].destino.tipo == "Aceptacion")
-                        {
-                            izquierda.LTransiciones[i].destino = derecha.LEstados[comienzo];
-                        }
-                    }
-                    break;
-                }
-            }
-
-            //el donde antes comensaba el automata de la derecha ahora se convierte 
-            //en un estado de inicio mas del automata de la iquierda
-            derecha.LEstados[comienzo].tipo = "Inicio";
-
-            //busca el estado de aceptacion del automata de la izquierda  lo elimina
-            for(int i = 0; i < izquierda.LEstados.Count; i++)
-            {
-                if(izquierda.LEstados[i].tipo == "Aceptacion")
-                {
-                    izquierda.LEstados.RemoveAt(i);
-                    break;
-                }
-            }
-
-            //agrega todos los estados de la automata de la derecha al de la izquierda
-            foreach (Edo e in derecha.LEstados)
-                izquierda.LEstados.Add(e);
-            //agrega todas las transiciones del automata de la derecha al de la izquierda
-            foreach (Transicion t in derecha.LTransiciones)
-                izquierda.LTransiciones.Add(t);
+            AFN nuevo = new AFN(izquierda, derecha, "concatenacion");
 
             pilaR.RemoveAt(topePila);
-            pilaR[topePila - 1] = izquierda;
+            pilaR.RemoveAt(topePila - 1);
+            pilaR.Add(nuevo);
+        }
 
+        public void enumeraEstados()
+        {
+            int cont = 0;
+            foreach(Edo unEstado in pilaR[0].LEstados)
+            {
+                if (unEstado.tipo == "Comienzo")
+                {
+                    unEstado.id = 0;
+                    continue;
+                }
+                if (unEstado.tipo == "Aceptacion")
+                {
+                    unEstado.id = pilaR[0].LEstados.Count - 1;
+                    continue;
+                }
+                else
+                {
+                    unEstado.id = ++cont;
+                }
+            }
+            pilaR[0].LEstados = pilaR[0].LEstados.OrderBy(x => x.id).ToList();
+        }
+
+        public void obtenConjuntos(string exprecion)
+        {
+            string lenguaje2 = exprecion.Replace("&", "");
+            lenguaje2 = lenguaje2.Replace("|", "");
+            lenguaje2 = lenguaje2.Replace("?", "");
+            lenguaje2 = lenguaje2.Replace("+", "");
+            lenguaje2 = lenguaje2.Replace("*", "");
+            lenguaje2 += "ε";
+            var lenguajetemp = new HashSet<char>(lenguaje2);
+
+            AFN lastAFN = pilaR[0];
+            
+            foreach(Edo unEstado in lastAFN.LEstados)
+            {
+                foreach(char unCaracter in lenguajetemp)
+                {
+                    List<int> temp = new List<int>();
+                    foreach (Transicion unaTransicion in lastAFN.LTransiciones)
+                    {
+                        if(unaTransicion.etiqueta == unCaracter.ToString())
+                        {
+                            if(unEstado.id == unaTransicion.origen.id)
+                            {
+                                temp.Add(unaTransicion.destino.id);
+                            }
+                        }
+                    }
+                    unEstado.conjuntoRelaciones.Add(temp);
+                }
+            }
         }
     }
 }
