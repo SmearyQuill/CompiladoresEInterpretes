@@ -43,6 +43,16 @@ namespace CompiladoresInterpretes
             unAutomata.enumeraEstados();
             unAutomata.obtenConjuntos(tbPostfija.Text);
 
+            llenaDGV(unAutomata);
+        }
+
+        public void llenaDGV(Automata unAutomata)
+        {
+            DGV.DataSource = null;
+            DGV.Rows.Clear();
+            DGV.Columns.Clear();
+
+            
         }
     }
 }
