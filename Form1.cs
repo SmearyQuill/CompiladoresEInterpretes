@@ -92,6 +92,19 @@ namespace CompiladoresInterpretes
                 }
                 DGV.Rows.Add(fila.ToArray());
             }
+            int elementos = lenguajetemp.Count * unAutomata.pilaR[0].LEstados.Count;
+            for(int r = 1; r < lenguajetemp.Count + 1; r++)
+            {
+                for(int c = 0; c < unAutomata.pilaR[0].LEstados.Count; c++)
+                {
+                    if (DGV.Rows[c].Cells[r].Value.ToString() != "φ")
+                    {
+                        DGV.Rows[c].Cells[r].Style.BackColor = Color.Green;
+                    }
+                    else
+                        DGV.Rows[c].Cells[r].Style.BackColor = Color.Red;
+                }
+            }
 
         }
 
