@@ -74,6 +74,8 @@ namespace CompiladoresInterpretes
                         this.LTransiciones.Add(nuevaFinal);
                     }
                 }
+                this.LEstados.Add(inicio);
+                this.LEstados.Add(aceptacion);
                 this.LTransiciones.AddRange(izquierda.LTransiciones);
                 this.LEstados.AddRange(izquierda.LEstados);
             }
@@ -126,6 +128,8 @@ namespace CompiladoresInterpretes
                         this.LTransiciones.Add(nuevaFinal);
                     }
                 }
+                this.LEstados.Add(inicio);
+                this.LEstados.Add(aceptacion);
                 this.LTransiciones.AddRange(izquierda.LTransiciones);
                 this.LEstados.AddRange(izquierda.LEstados);
             }

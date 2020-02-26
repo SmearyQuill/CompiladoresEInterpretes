@@ -85,13 +85,14 @@
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 9);
+            this.label3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label3.Location = new System.Drawing.Point(0, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(266, 39);
+            this.label3.Size = new System.Drawing.Size(293, 39);
             this.label3.TabIndex = 6;
             this.label3.Text = "Compiladores e Interpretes A - Equipo Electro-Tamales \r\nFlores Aguilar Gael Ricar" +
     "do\r\nMarcado De Luna Guillermo Daniel";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DGV
             // 
@@ -126,6 +127,7 @@
             this.Controls.Add(this.bPostfija);
             this.Controls.Add(this.tbExprecion);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ProyectoCompiladres";
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             this.ResumeLayout(false);
